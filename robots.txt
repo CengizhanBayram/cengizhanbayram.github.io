@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cengizhanbayram.github.io/sitemap.xml
