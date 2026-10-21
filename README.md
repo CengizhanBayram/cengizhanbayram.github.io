@@ -13,7 +13,6 @@ Plain HTML/CSS/JS, no build step. GitHub Pages serves `index.html` from the root
 | `assets/css/style.css` | "Aureus" theme: black marble, gold, Pompeian red, Cinzel capitals |
 | `assets/js/main.js` | Language switch, coin portrait, laurel, section line drawings, fig. II |
 | `assets/img/` | Portrait (`portrait-cutout.webp` for the coin, `portrait.jpg` for link previews), the CB emblem (`emblem.png` master, `emblem-128.png` in the nav) and favicons cut from it |
-| `assets/cv/` | CV (PDF) |
 
 ## Editing
 
