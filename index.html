@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="tr" data-lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Cengizhan Bayram — LLM Efficiency · NLP Research</title>
+  <meta name="description" content="Cengizhan Bayram — LLM verimliliği araştırmacısı: nicemleme, speculative decoding, çıkarım optimizasyonu; RAG ve mekanistik yorumlanabilirlik. / LLM efficiency researcher: quantization, speculative decoding, inference optimization; RAG and mechanistic interpretability.">
+  <meta name="author" content="Cengizhan Bayram">
+  <meta name="theme-color" content="#0c0a08">
+  <link rel="canonical" href="https://cengizhanbayram.github.io/">
+  <link rel="icon" href="assets/img/favicon-96.png" sizes="96x96" type="image/png">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Cengizhan Bayram — LLM Efficiency · NLP Research">
+  <meta property="og:description" content="LLM efficiency: quantization, speculative decoding and inference optimization — plus RAG and mechanistic interpretability.">
+  <meta property="og:url" content="https://cengizhanbayram.github.io/">
+  <meta property="og:image" content="https://cengizhanbayram.github.io/assets/img/portrait.jpg">
+  <meta name="twitter:card" content="summary">
+
+  <script>
+    (function () {
+      var d = document.documentElement, l;
+      d.classList.add('js');
+      try { l = localStorage.getItem('lang'); } catch (e) {}
+      if (l !== 'tr' && l !== 'en') l = /^tr\b/i.test(navigator.language || '') ? 'tr' : 'en';
+      d.setAttribute('data-lang', l);
+      d.setAttribute('lang', l);
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Cengizhan Bayram",
+    "jobTitle": "Machine Learning Engineer",
+    "url": "https://cengizhanbayram.github.io/",
+    "image": "https://cengizhanbayram.github.io/assets/img/portrait.jpg",
+    "email": "mailto:cengizhanbayramtr@gmail.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "Konya", "addressCountry": "TR" },
+    "affiliation": { "@type": "CollegeOrUniversity", "name": "Konya Technical University" },
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "Manisa Celal Bayar University" },
+    "knowsAbout": ["LLM Efficiency", "Quantization", "Speculative Decoding", "Inference Optimization", "Large Language Models", "Retrieval-Augmented Generation", "Mechanistic Interpretability", "Natural Language Processing"],
+    "sameAs": [
+      "https://github.com/CengizhanBayram",
+      "https://www.linkedin.com/in/cengizhan-bayram",
+      "https://orcid.org/0009-0002-3915-6881",
+      "https://medium.com/@cenghanbayram35",
+      "https://huggingface.co/Cosmobillian"
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<!-- ============ shared SVG defs ============ -->
+<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- hedera: the ivy-leaf word divider of Roman inscriptions -->
+    <symbol id="i-hedera" viewBox="-12 -12 24 24">
+      <path d="M-9.5 0C-9.5-6.2-3.6-9.6 1-6.6 2.4-9.4 6.6-9.8 8.4-6.8 10.2-3.8 8.2-.6 11 0 8.2.6 10.2 3.8 8.4 6.8 6.6 9.8 2.4 9.4 1 6.6-3.6 9.6-9.5 6.2-9.5 0Z"/>
+    </symbol>
+    <symbol id="i-github" viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.11.82-.26.82-.58l-.02-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .32.21.7.82.58A12 12 0 0 0 12 .3"/></symbol>
+    <symbol id="i-linkedin" viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13Zm1.78 13.02H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></symbol>
+    <symbol id="i-orcid" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 1a11 11 0 1 0 0 22 11 11 0 0 0 0-22ZM7 5.2a1.15 1.15 0 1 0 0 2.3 1.15 1.15 0 0 0 0-2.3ZM6.1 8.6v9h1.8v-9H6.1Zm4 0v9h3.6c3 0 4.9-2 4.9-4.5s-1.9-4.5-4.9-4.5h-3.6Zm1.8 1.6h1.7c2 0 3.1 1.3 3.1 2.9S15.6 16 13.6 16h-1.7v-5.8Z"/></symbol>
+    <symbol id="i-medium" viewBox="0 0 24 24"><path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12Zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42ZM24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12Z"/></symbol>
+    <symbol id="i-hf" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21ZM8.3 7.6a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm7.4 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM6.9 13.1c.5 2.6 2.6 4.4 5.1 4.4s4.6-1.8 5.1-4.4H6.9Z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M3 5.5h18v13H3z M3.5 6l8.5 7 8.5-7"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7 17 17 7M9 7h8v8"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M12 4v12m-5-5 5 5 5-5M5 20h14"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 8h11v12H8z M5 16V4h11"/></symbol>
+
+    <linearGradient id="g-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7e4a8"/>
+      <stop offset=".32" stop-color="#cfa04a"/>
+      <stop offset=".58" stop-color="#8c6426"/>
+      <stop offset=".82" stop-color="#ecca7c"/>
+      <stop offset="1" stop-color="#a87a2c"/>
+    </linearGradient>
+    <radialGradient id="g-field" cx=".5" cy=".42" r=".62">
+      <stop offset="0" stop-color="#3a2a1a"/>
+      <stop offset=".7" stop-color="#1a120c"/>
+      <stop offset="1" stop-color="#0e0a07"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<!-- ============ backdrop ============ -->
+<div class="bg-wash" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<a class="skip" href="#research"><span lang="tr">İçeriğe geç</span><span lang="en">Skip to content</span></a>
+
+<!-- ============ nav ============ -->
+<header class="nav" id="nav">
+  <div class="progress" id="progress"></div>
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="Cengizhan Bayram">
+      <img class="brand-coin" src="assets/img/emblem-128.png" alt="" width="40" height="40">
+      <span class="brand-text">Cengizhan Bayram</span>
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Site">
+      <a href="#research"><span lang="tr">Araştırma</span><span lang="en">Research</span></a>
+      <a href="#publications"><span lang="tr">Yayınlar</span><span lang="en">Publications</span></a>
+      <a href="#projects"><span lang="tr">Projeler</span><span lang="en">Projects</span></a>
+      <a href="#education"><span lang="tr">Eğitim</span><span lang="en">Education</span></a>
+      <a href="#experience"><span lang="tr">Deneyim</span><span lang="en">Experience</span></a>
+      <a href="#contact"><span lang="tr">İletişim</span><span lang="en">Contact</span></a>
+    </nav>
+    <div class="nav-tools">
+      <button class="lang" id="lang-toggle" type="button" aria-label="Dil / Language">
+        <span data-l="tr">TR</span><span class="lang-sep">/</span><span data-l="en">EN</span>
+      </button>
+      <button class="burger" id="burger" type="button" aria-label="Menü" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ hero ============ -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <a class="latest reveal" href="https://arxiv.org/abs/2606.21249" target="_blank" rel="noopener">
+        <span class="latest-tag mono"><span lang="tr">Yeni ön baskı</span><span lang="en">New preprint</span></span>
+        <span class="latest-title">Does RoPE Prevent or Degrade Retrieval Heads?</span>
+        <svg class="ic"><use href="#i-arrow"/></svg>
+      </a>
+
+      <h1 class="hero-name" aria-label="Cengizhan Bayram">
+        <span class="line split">Cengizhan</span>
+        <span class="line split accent">Bayram</span>
+      </h1>
+
+      <p class="hero-role mono">
+        <span lang="tr" class="scramble">LLM Verimliliği Araştırmacısı · Makine Öğrenmesi Mühendisi</span>
+        <span lang="en" class="scramble">LLM Efficiency Researcher · Machine Learning Engineer</span>
+      </p>
+
+      <p class="hero-lead reveal">
+        <span lang="tr"><em>LLM verimliliği</em> üzerine çalışıyorum: büyük dil modellerini nicemleme, speculative decoding ve çıkarım optimizasyonuyla daha hızlı ve daha hafif hale getirmek. Yanında RAG sistemleri ve mekanistik yorumlanabilirlik.</span>
+        <span lang="en">I work on <em>LLM efficiency</em>: making large language models faster and lighter through quantization, speculative decoding and inference optimization — alongside RAG systems and mechanistic interpretability.</span>
+      </p>
+
+      <p class="hero-now mono reveal">
+        <span class="pulse" aria-hidden="true"></span>
+        <span lang="tr">Şu an: Tezli Yüksek Lisans @ KTÜN</span>
+        <span lang="en">Now: M.Sc. (thesis) @ KTUN</span>
+      </p>
+
+      <div class="hero-cta reveal">
+        <a class="btn btn-gold" href="#publications">
+          <span lang="tr">Araştırmayı keşfet</span><span lang="en">Explore the research</span>
+          <svg class="ic"><use href="#i-arrow"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="assets/cv/cengizhan-bayram-cv-tr.pdf" target="_blank" rel="noopener">
+          <svg class="ic"><use href="#i-down"/></svg> CV (PDF)
+        </a>
+      </div>
+
+      <ul class="socials reveal">
+        <li><a href="https://github.com/CengizhanBayram" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ic"><use href="#i-github"/></svg></a></li>
+        <li><a href="https://www.linkedin.com/in/cengizhan-bayram" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ic"><use href="#i-linkedin"/></svg></a></li>
+        <li><a href="https://orcid.org/0009-0002-3915-6881" target="_blank" rel="noopener" aria-label="ORCID"><svg class="ic"><use href="#i-orcid"/></svg></a></li>
+        <li><a href="https://huggingface.co/Cosmobillian" target="_blank" rel="noopener" aria-label="Hugging Face"><svg class="ic"><use href="#i-hf"/></svg></a></li>
+        <li><a href="https://medium.com/@cenghanbayram35" target="_blank" rel="noopener" aria-label="Medium"><svg class="ic"><use href="#i-medium"/></svg></a></li>
+        <li><a href="mailto:cengizhanbayramtr@gmail.com" aria-label="E-mail"><svg class="ic"><use href="#i-mail"/></svg></a></li>
+      </ul>
+    </div>
+
+    <div class="hero-art">
+      <div class="coin-wrap" id="coin">
+        <svg class="laurel" id="laurel" viewBox="-300 -300 600 600" aria-hidden="true"></svg>
+
+        <div class="coin">
+          <svg class="coin-rim" viewBox="0 0 400 400" aria-hidden="true">
+            <defs>
+              <path id="legend-path" d="M200 200m-164 0a164 164 0 1 1 328 0 164 164 0 1 1-328 0"/>
+            </defs>
+            <circle cx="200" cy="200" r="198" fill="url(#g-gold)"/>
+            <circle cx="200" cy="200" r="191" fill="none" stroke="#5c4018" stroke-width="1.2" opacity=".7"/>
+            <circle cx="200" cy="200" r="189" fill="url(#g-field)"/>
+            <circle class="beads" cx="200" cy="200" r="182"/>
+            <g class="legend-rot">
+              <text class="legend"><textPath href="#legend-path" textLength="1020" lengthAdjust="spacing">CENGIZHAN · BAYRAM · LLM · EFFICIENCY · MMXXVI ·</textPath></text>
+            </g>
+            <circle class="inner-ring" cx="200" cy="200" r="151"/>
+          </svg>
+
+          <div class="coin-field">
+            <div class="field-halo"></div>
+            <canvas class="portrait-dots" id="portrait-dots" aria-hidden="true"></canvas>
+            <img class="portrait-img" id="portrait-img" src="assets/img/portrait-cutout.webp" alt="Cengizhan Bayram" width="900" height="959" decoding="async">
+          </div>
+          <div class="coin-sheen" aria-hidden="true"></div>
+        </div>
+      </div>
+      <p class="fig-cap mono">
+        <span class="fig-no">fig. I</span>
+        <span lang="tr">portre, bir dikkat haritası olarak — üzerine gel / dokun</span>
+        <span lang="en">portrait as an attention map — hover / tap</span>
+      </p>
+    </div>
+  </div>
+
+  <a class="scroll-cue mono" href="#research">
+    <span lang="tr">kaydır</span><span lang="en">scroll</span>
+    <span class="scroll-line"></span>
+  </a>
+</section>
+
+<!-- ============ marquee ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <ul class="marquee-list">
+      <li><span lang="tr">LLM Verimliliği</span><span lang="en">LLM Efficiency</span></li>
+      <li><span lang="tr">Nicemleme</span><span lang="en">Quantization</span></li>
+      <li>Speculative Decoding</li>
+      <li><span lang="tr">Çıkarım Optimizasyonu</span><span lang="en">Inference Optimization</span></li>
+      <li><span lang="tr">Büyük Dil Modelleri</span><span lang="en">Large Language Models</span></li>
+      <li><span lang="tr">Mekanistik Yorumlanabilirlik</span><span lang="en">Mechanistic Interpretability</span></li>
+      <li>RAG</li>
+      <li><span lang="tr">Doğal Dil İşleme</span><span lang="en">Natural Language Processing</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ I research profile ============ -->
+<section class="section" id="research" data-art="armillary">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <span class="sec-idx">I</span>
+      <h2 class="sec-title"><span lang="tr">Araştırma Profili</span><span lang="en">Research Profile</span></h2>
+      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+    </header>
+
+    <div class="about-grid">
+      <blockquote class="pull reveal">
+        <span class="pull-mark" aria-hidden="true">“</span>
+        <span lang="tr">Araştırma sorularını tekrarlanabilir sistemlere dönüştürmeyi seviyorum.</span>
+        <span lang="en">I like turning research questions into reproducible systems.</span>
+      </blockquote>
+
+      <div class="about-text reveal">
+        <p lang="tr">Konya Teknik Üniversitesi Bilgisayar Mühendisliği <strong>tezli yüksek lisans</strong> öğrencisi ve sektör deneyimine sahip bir makine öğrenmesi mühendisiyim. Veri toplama ve ön işlemeden modellemeye, değerlendirmeye ve canlıya almaya kadar <strong>uçtan uca makine öğrenmesi süreçlerinde</strong> güçlü uygulama deneyimim var. Çalışmalarım <strong>NLP ve büyük dil modelleri (LLM)</strong>, <strong>bilgi erişimi (RAG)</strong>, <strong>mekanistik yorumlanabilirlik</strong> ve <strong>model verimliliği</strong> (nicemleme, optimizasyon) alanlarını kapsıyor.</p>
+        <p lang="tr">TEKNOFEST finaline kalan bir <a href="https://github.com/CengizhanBayram/TeknofestHackathonLawLanguageMotion" target="_blank" rel="noopener">hukuk NLP asistanı</a>, RoPE’nin mekanistik yorumlanabilirliği üzerine bir <a href="https://arxiv.org/abs/2606.21249" target="_blank" rel="noopener">arXiv makalesi</a>, Türkçe LLM’lerde nicemleme üzerine <a href="https://dergipark.org.tr/tr/pub/veri/article/1837255" target="_blank" rel="noopener">hakemli bir dergi makalesi</a>, iki optimizasyon çalışması ve <a href="https://huggingface.co/Cosmobillian" target="_blank" rel="noopener">Hugging Face</a> üzerinde açık kaynak modeller bunlardan bazıları.</p>
+
+        <p lang="en">I am a thesis-track <strong>M.Sc. student</strong> in Computer Engineering at Konya Technical University and a machine learning engineer with industry experience. I have strong hands-on experience across the <strong>end-to-end ML lifecycle</strong> — from data collection and preprocessing to modeling, evaluation and deployment. My work spans <strong>NLP and large language models (LLMs)</strong>, <strong>information retrieval (RAG)</strong>, <strong>mechanistic interpretability</strong> and <strong>model efficiency</strong> (quantization, optimization).</p>
+        <p lang="en">A <a href="https://github.com/CengizhanBayram/TeknofestHackathonLawLanguageMotion" target="_blank" rel="noopener">legal NLP assistant</a> that reached the TEKNOFEST finals, an <a href="https://arxiv.org/abs/2606.21249" target="_blank" rel="noopener">arXiv paper</a> on the mechanistic interpretability of RoPE, a <a href="https://dergipark.org.tr/tr/pub/veri/article/1837255" target="_blank" rel="noopener">peer-reviewed journal article</a> on quantization in Turkish LLMs, two optimization studies and open-source models on <a href="https://huggingface.co/Cosmobillian" target="_blank" rel="noopener">Hugging Face</a> are some of them.</p>
+      </div>
+    </div>
+
+    <div class="focus">
+      <p class="focus-head mono reveal"><span lang="tr">Güncel araştırma odağı · tezli yüksek lisans</span><span lang="en">Current research focus · M.Sc. thesis track</span></p>
+      <div class="focus-grid">
+        <a class="pillar pillar-main card reveal" href="#pub-quant">
+          <span class="pillar-num">I</span>
+          <span class="pillar-kicker mono"><span lang="tr">Ana odak</span><span lang="en">Main focus</span></span>
+          <h3><span lang="tr">LLM Verimliliği</span><span lang="en">LLM Efficiency</span></h3>
+          <p lang="tr">Büyük dil modellerini kısıtlı kaynaklarda hızlı, hafif ve doğru çalıştırmak: doğruluk, hız ve bellek arasındaki dengeleri ölçmek ve optimize etmek.</p>
+          <p lang="en">Running large language models fast, light and accurate under constrained resources: measuring and optimizing the trade-offs between accuracy, speed and memory.</p>
+          <ul class="pillar-topics">
+            <li><span lang="tr">Nicemleme</span><span lang="en">Quantization</span> · INT8/INT4</li>
+            <li>Speculative decoding</li>
+            <li><span lang="tr">Budama</span><span lang="en">Pruning</span></li>
+            <li><span lang="tr">Çıkarım optimizasyonu</span><span lang="en">Inference optimization</span></li>
+            <li><span lang="tr">Uyarlanabilir optimizasyon</span><span lang="en">Adaptive optimization</span></li>
+          </ul>
+          <span class="pillar-ref mono">
+            <span lang="tr">Türkçe LLM’lerde nicemleme · Veri Bilimi Dergisi, 2025</span><span lang="en">Quantization in Turkish LLMs · Veri Bilimi Dergisi, 2025</span><br>
+            PALA · RAIIN — <span lang="tr">platoya duyarlı optimizasyon</span><span lang="en">plateau-aware optimization</span>
+          </span>
+        </a>
+        <a class="pillar card reveal" href="#pub-rope">
+          <span class="pillar-num">II</span>
+          <h3><span lang="tr">Mekanistik Yorumlanabilirlik</span><span lang="en">Mechanistic Interpretability</span></h3>
+          <p lang="tr">Dikkat head’lerinin uzun bağlamda bilgiyi nasıl geri çağırdığını nedensel deneylerle incelemek.</p>
+          <p lang="en">Studying, through causal experiments, how attention heads retrieve information over long contexts.</p>
+          <span class="pillar-ref mono">RoPE × Retrieval Heads · arXiv, 2026</span>
+        </a>
+        <a class="pillar card reveal" href="#experience">
+          <span class="pillar-num">III</span>
+          <h3><span lang="tr">RAG Sistemleri</span><span lang="en">RAG Systems</span></h3>
+          <p lang="tr">Retriever, re-ranker ve önbellekten oluşan erişim hatlarını sistematik ablasyonlarla tasarlamak ve değerlendirmek.</p>
+          <p lang="en">Designing and evaluating retrieval pipelines — retriever, re-ranker and cache — through systematic ablations.</p>
+          <span class="pillar-ref mono"><span lang="tr">Kurumsal RAG hattı · Enm Digital</span><span lang="en">Enterprise RAG pipeline · Enm Digital</span></span>
+        </a>
+      </div>
+    </div>
+
+    <ul class="stats">
+      <li class="stat reveal">
+        <span class="stat-num"><span class="count" data-to="4">4</span></span>
+        <span class="stat-label">
+          <span lang="tr">yayın: 1 hakemli dergi makalesi, 3 ön baskı</span>
+          <span lang="en">publications: 1 peer-reviewed journal article, 3 preprints</span>
+        </span>
+      </li>
+      <li class="stat reveal">
+        <span class="stat-num"><span lang="tr">%</span><span class="count" data-to="25">25</span><span lang="en">%</span></span>
+        <span class="stat-label">
+          <span lang="tr">PALA ile aynı doğruluğa daha az epoch</span>
+          <span lang="en">fewer epochs to the same accuracy with PALA</span>
+        </span>
+      </li>
+      <li class="stat reveal">
+        <span class="stat-num"><span class="count" data-to="87">87</span></span>
+        <span class="stat-label">
+          <span lang="tr">maskelenince hatırlamayı 1,00’dan 0,00’a düşüren retrieval head</span>
+          <span lang="en">retrieval heads whose masking drops recall from 1.00 to 0.00</span>
+        </span>
+      </li>
+      <li class="stat reveal">
+        <span class="stat-num"><span class="count" data-to="5">5</span></span>
+        <span class="stat-label">
+          <span lang="tr">mekanistik olarak incelenen açık ağırlıklı model ailesi</span>
+          <span lang="en">open-weight model families analyzed mechanistically</span>
+        </span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ II research interests ============ -->
+<section class="section" id="interests" data-art="euclid">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <span class="sec-idx">II</span>
+      <h2 class="sec-title"><span lang="tr">Araştırma İlgi Alanları</span><span lang="en">Research Interests</span></h2>
+      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+    </header>
+
+    <div class="interests">
+      <article class="interest card reveal">
+        <!-- libra: a balance, for accuracy / memory / speed trade-offs -->
+        <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M32 10v42M20 54h24M10 18h44"/>
+          <path d="M10 18 4 34M10 18l6 16M54 18l-6 16M54 18l6 16"/>
+          <path class="g-accent" d="M3 34a7 4 0 0 0 14 0ZM47 34a7 4 0 0 0 14 0Z"/>
+          <circle class="g-accent" cx="32" cy="10" r="3"/>
+        </svg>
+        <p class="card-idx mono">i.</p>
+        <h3><span lang="tr">Verimli MÖ</span><span lang="en">Efficient ML</span></h3>
+        <p lang="tr">Model sıkıştırma (nicemleme, budama), çıkarım optimizasyonu, ölçeklenebilir dağıtım ve uyarlanabilir optimizasyon.</p>
+        <p lang="en">Model compression (quantization, pruning), inference optimization, scalable deployment and adaptive optimization.</p>
+      </article>
+      <article class="interest card reveal">
+        <!-- ad quadratum: circle, square and their diagonals -->
+        <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="27"/>
+          <rect x="12.9" y="12.9" width="38.2" height="38.2"/>
+          <path class="g-accent" d="M12.9 12.9 51.1 51.1M51.1 12.9 12.9 51.1"/>
+          <circle class="g-accent" cx="32" cy="32" r="4"/>
+        </svg>
+        <p class="card-idx mono">ii.</p>
+        <h3><span lang="tr">MÖ &amp; İstatistik</span><span lang="en">ML &amp; Statistics</span></h3>
+        <p lang="tr">Denetimli/denetimsiz öğrenme, model seçimi, performans değerlendirme ve deney tasarımı.</p>
+        <p lang="en">Supervised/unsupervised learning, model selection, performance evaluation and experimental design.</p>
+      </article>
+      <article class="interest card reveal">
+        <!-- volumen: an open scroll -->
+        <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
+          <rect x="14" y="16" width="36" height="32"/>
+          <ellipse cx="14" cy="32" rx="4" ry="17"/>
+          <ellipse cx="50" cy="32" rx="4" ry="17"/>
+          <path class="g-accent" d="M22 24h20M22 30h20M22 36h14M22 42h17"/>
+        </svg>
+        <p class="card-idx mono">iii.</p>
+        <h3>NLP &amp; LLM</h3>
+        <p lang="tr">Metin madenciliği, bilgi çıkarımı, Erişimle Zenginleştirilmiş Üretim (RAG), mekanistik yorumlanabilirlik, alana özgü NLP (hukuk, tıp).</p>
+        <p lang="en">Text mining, information extraction, Retrieval-Augmented Generation (RAG), mechanistic interpretability, domain-specific NLP (legal, medical).</p>
+      </article>
+      <article class="interest card reveal">
+        <!-- aqueduct: the original data pipeline -->
+        <svg class="glyph" viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M4 18h56M4 22h56M4 52V22M60 52V22"/>
+          <path d="M4 52V36a7 7 0 0 1 14 0v16M18 52V36a7 7 0 0 1 14 0v16M32 52V36a7 7 0 0 1 14 0v16M46 52V36a7 7 0 0 1 14 0v16"/>
+          <path class="g-accent" d="M4 14h56"/>
+          <path class="g-accent" d="M8 26a3 3 0 0 1 6 0M22 26a3 3 0 0 1 6 0M36 26a3 3 0 0 1 6 0M50 26a3 3 0 0 1 6 0"/>
+        </svg>
+        <p class="card-idx mono">iv.</p>
+        <h3><span lang="tr">Veri Odaklı</span><span lang="en">Data-Driven</span></h3>
+        <p lang="tr">Uçtan uca veri hattı tasarımı, öznitelik mühendisliği, A/B testleri ve bulguların paydaşlara aktarılması.</p>
+        <p lang="en">End-to-end data pipeline design, feature engineering, A/B testing and communicating findings to stakeholders.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ III publications ============ -->
+<section class="section" id="publications" data-art="dome">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <span class="sec-idx">III</span>
+      <h2 class="sec-title"><span lang="tr">Yayınlar</span><span lang="en">Publications</span></h2>
+      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+    </header>
+
+    <!-- featured: RoPE -->
+    <article class="pub-featured card reveal" id="pub-rope">
+      <div class="pub-main">
+        <p class="pub-meta mono">
+          <span class="tag tag-red">arXiv · 2026</span>
+          <span lang="tr">Ön baskı</span><span lang="en">Preprint</span>
+          <span class="topic"><span lang="tr">Yorumlanabilirlik</span><span lang="en">Interpretability</span></span>
+        </p>
+        <h3 class="pub-title">Does RoPE Prevent or Degrade Retrieval Heads? A Mechanistic Analysis Across Model Families</h3>
+        <p class="pub-venue mono">arXiv:2606.21249</p>
+
+        <p class="pub-abs" lang="tr">Döner Konum Gömmeleri (RoPE) ile retrieval head’ler arasındaki ilişkiye dair, beş açık ağırlıklı 7–8B model (OLMo-2, Qwen2.5, LLaMA, Gemma-2, Mistral) üzerinde <strong>nedensel, mekanistik bir çalışma</strong>: eşleştirilmiş tohumlu needle-in-a-haystack testleri, katman kümeli permütasyon ve nedensel head maskeleme.</p>
+        <p class="pub-abs" lang="en">A <strong>causal, mechanistic study</strong> of the relationship between Rotary Position Embeddings (RoPE) and retrieval heads across five open-weight 7–8B models (OLMo-2, Qwen2.5, LLaMA, Gemma-2, Mistral), using paired-seed needle-in-a-haystack tests, layer-clustered permutation and causal head masking.</p>
+
+        <ol class="findings">
+          <li>
+            <span class="f-n">I</span>
+            <p lang="tr">Retrieval head’ler uzun bağlamda hatırlama için <strong>nedensel olarak zorunlu</strong>: OLMo-2’de 87 head maskelendiğinde hatırlama 1,00’dan 0,00’a düşüyor.</p>
+            <p lang="en">Retrieval heads are <strong>causally necessary</strong> for long-context recall: masking 87 heads in OLMo-2 drops recall from 1.00 to 0.00.</p>
+          </li>
+          <li>
+            <span class="f-n">II</span>
+            <p lang="tr">Daha yüksek RoPE θ retrieval head sayısını <strong>azaltmıyor</strong> — önleme hipotezi çürütüldü.</p>
+            <p lang="en">A higher RoPE θ does <strong>not reduce</strong> the number of retrieval heads — the prevention hypothesis is refuted.</p>
+          </li>
+          <li>
+            <span class="f-n">III</span>
+            <p lang="tr">En düşük frekanslı RoPE boyutlarının sıfırlanması hatırlamayı <strong>doza bağlı</strong> biçimde düşürüyor: 32/128 boyutta 1,00 → 0,18.</p>
+            <p lang="en">Zeroing the lowest-frequency RoPE dimensions degrades recall in a <strong>dose-dependent</strong> way: 1.00 → 0.18 at 32/128 dims.</p>
+          </li>
+        </ol>
+
+        <ul class="kw">
+          <li><span lang="tr">Mekanistik Yorumlanabilirlik</span><span lang="en">Mechanistic Interpretability</span></li>
+          <li>RoPE</li><li>Retrieval Head</li>
+          <li><span lang="tr">Uzun Bağlam</span><span lang="en">Long Context</span></li>
+          <li><span lang="tr">Dikkat Analizi</span><span lang="en">Attention Analysis</span></li>
+        </ul>
+
+        <div class="pub-links">
+          <a class="link-chip" href="https://arxiv.org/abs/2606.21249" target="_blank" rel="noopener">arXiv <svg class="ic"><use href="#i-arrow"/></svg></a>
+          <a class="link-chip" href="https://github.com/CengizhanBayram/Does-RoPE-Prevent-or-Degrade-Retrieval-Heads-A-Mechanistic-Analysis-Across-Model-Families" target="_blank" rel="noopener">
+            <span lang="tr">Kod + tekrarlanabilirlik</span><span lang="en">Code + reproducibility</span> <svg class="ic"><use href="#i-arrow"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <figure class="fig-rope" id="fig-rope">
+        <div class="fig-tabs" role="group" aria-label="Ablation">
+          <button type="button" data-mode="base" aria-pressed="true"><span lang="tr">Temel</span><span lang="en">Baseline</span></button>
+          <button type="button" data-mode="mask" aria-pressed="false"><span lang="tr">87 head’i maskele</span><span lang="en">Mask 87 heads</span></button>
+          <button type="button" data-mode="rope" aria-pressed="false"><span lang="tr">32/128 RoPE boyutunu sıfırla</span><span lang="en">Zero 32/128 RoPE dims</span></button>
+        </div>
+
+        <div class="fig-plot">
+          <span class="axis-y mono">head →</span>
+          <div class="head-grid" id="head-grid" aria-hidden="true"></div>
+          <span class="axis-x mono"><span lang="tr">katman →</span><span lang="en">layer →</span></span>
+        </div>
+
+        <div class="dims">
+          <div class="dims-strip" id="dims-strip" aria-hidden="true"></div>
+          <div class="dims-legend mono">
+            <span>d₀ · <span lang="tr">yüksek frekans</span><span lang="en">high freq</span></span>
+            <span><span lang="tr">düşük frekans</span><span lang="en">low freq</span> · d₁₂₇</span>
+          </div>
+        </div>
+
+        <div class="recall">
+          <span class="recall-label mono">NIAH recall · OLMo-2</span>
+          <span class="recall-num" id="recall-num" aria-live="polite">1.00</span>
+          <span class="recall-bar"><span id="recall-bar"></span></span>
+        </div>
+
+        <figcaption class="mono">
+          <span class="fig-no">fig. II</span>
+          <span lang="tr">Şematik: head konumları temsilîdir; recall değerleri makaleden alınmıştır.</span>
+          <span lang="en">Schematic: head positions are illustrative; recall values are from the paper.</span>
+        </figcaption>
+      </figure>
+    </article>
+
+    <div class="pub-grid">
+      <!-- journal -->
+      <article class="pub-card card reveal" id="pub-quant">
+        <p class="pub-meta mono">
+          <span class="tag tag-gold"><span lang="tr">Hakemli dergi</span><span lang="en">Peer-reviewed</span></span>
+          2025
+          <span class="topic"><span lang="tr">LLM verimliliği</span><span lang="en">LLM efficiency</span></span>
+        </p>
+        <h3 class="pub-title sm">Türkçe LLM’lerde Nicemleme Dengelemesi: Doğruluk, Hız ve Bellek Kullanımı Üzerine Bir Değerlendirme</h3>
+        <p class="pub-trans" lang="en">Quantization Trade-offs in Turkish LLMs: An Evaluation of Accuracy, Speed and Memory Usage</p>
+        <p class="pub-venue mono"><em>Veri Bilimi Dergisi</em>, 8(2), 70–80</p>
+        <p class="pub-authors"><strong>Bayram, C.</strong>, Turan, C. A., Kürkçüoğlu, F., &amp; Altıntaş, V.</p>
+
+        <div class="viz-bits" aria-hidden="true">
+          <div class="bits-row"><span class="mono">FP16</span><span class="bits" style="--n:16"></span></div>
+          <div class="bits-row"><span class="mono">INT8</span><span class="bits" style="--n:8"></span></div>
+          <div class="bits-row"><span class="mono">INT4</span><span class="bits" style="--n:4"></span></div>
+          <p class="viz-note mono"><span lang="tr">ağırlık başına bit</span><span lang="en">bits per weight</span></p>
+        </div>
+
+        <p lang="tr">Bir Türkçe LLM üzerinde eğitim sonrası, yalnızca ağırlık nicemlemenin (INT8/INT4) sistematik deneysel analizi. INT4, kısıtlı kaynaklı ortamlarda bellek verimliliği ile kabul edilebilir doğruluk arasında dengeli bir seçenek; INT8 bazı sınıflandırma görevlerinde rekabetçi doğruluğu koruyabiliyor, ancak donanım/yazılım yapılandırmasına bağlı olarak hız dezavantajı gösterebiliyor.</p>
+        <p lang="en">A systematic experimental analysis of post-training, weight-only quantization (INT8/INT4) on a Turkish LLM. INT4 offers a balanced option between memory efficiency and acceptable accuracy in resource-constrained settings; INT8 can retain competitive accuracy on some classification tasks but may show a speed penalty depending on the hardware/software configuration.</p>
+
+        <div class="pub-links">
+          <a class="link-chip" href="https://dergipark.org.tr/tr/pub/veri/article/1837255" target="_blank" rel="noopener">DergiPark <svg class="ic"><use href="#i-arrow"/></svg></a>
+        </div>
+      </article>
+
+      <!-- PALA -->
+      <article class="pub-card card reveal">
+        <p class="pub-meta mono">
+          <span class="tag tag-red">Zenodo · 2026</span>
+          <span lang="tr">Ön baskı</span><span lang="en">Preprint</span>
+          <span class="topic"><span lang="tr">Eğitim verimliliği</span><span lang="en">Training efficiency</span></span>
+        </p>
+        <h3 class="pub-title sm">PALA: Plateau-Aware Learning with Adaptive Memory</h3>
+
+        <div class="viz-bars" aria-hidden="true">
+          <div class="bar-row"><span class="mono">ReduceLROnPlateau</span><span class="bar" style="--v:1"><b>100</b></span></div>
+          <div class="bar-row hl"><span class="mono">PALA</span><span class="bar" style="--v:.75"><b>75</b></span></div>
+          <p class="viz-note mono"><span lang="tr">aynı nihai doğruluğa ort. epoch</span><span lang="en">mean epochs to the same final accuracy</span></p>
+        </div>
+
+        <ul class="plateaus mono" aria-label="Plateau types"><li>SADDLE</li><li>FLAT</li><li>SHARP</li></ul>
+
+        <p lang="tr">Adam ailesi optimize ediciler için, eğitim platosunun türünü SNR güdümlü gradyan istatistikleriyle teşhis eden ve geometriye uyarlanmış kosinüs öğrenme oranı sıçramalarıyla yanıt veren bir sarmalayıcı; ilgi bölgesi (ROI) belleği sonraki taban seçimini yönlendiriyor. Zamanlamaya özgü hiperparametre ayarı gerektirmiyor; CIFAR-100 ve STL-10’da yalın Adam’ı <strong>+3,8 yp</strong> geride bırakıyor.</p>
+        <p lang="en">A wrapper for Adam-family optimizers that diagnoses the type of training plateau from SNR-driven gradient statistics and responds with geometry-adapted cosine learning-rate bursts; a region-of-interest (ROI) memory guides subsequent base selection. Needs no schedule-specific hyperparameter tuning and beats vanilla Adam by <strong>+3.8 pp</strong> on CIFAR-100 and STL-10.</p>
+
+        <div class="pub-links">
+          <a class="link-chip" href="https://zenodo.org/records/20580454" target="_blank" rel="noopener">Zenodo <svg class="ic"><use href="#i-arrow"/></svg></a>
+          <a class="link-chip" href="https://github.com/CengizhanBayram/pala_algorithm" target="_blank" rel="noopener">GitHub <svg class="ic"><use href="#i-arrow"/></svg></a>
+        </div>
+      </article>
+
+      <!-- RAIIN -->
+      <article class="pub-card card reveal">
+        <p class="pub-meta mono">
+          <span class="tag tag-red">Zenodo · 2025</span>
+          <span lang="tr">Ön baskı</span><span lang="en">Preprint</span>
+          <span class="topic"><span lang="tr">Eğitim verimliliği</span><span lang="en">Training efficiency</span></span>
+        </p>
+        <h3 class="pub-title sm">RAIIN: Plateau-Aware Hyperparameter Search for Adam</h3>
+
+        <div class="viz-dots" aria-hidden="true">
+          <div class="dots-row">
+            <span class="mono"><span lang="tr">kayıp</span><span lang="en">loss</span></span>
+            <span class="dset on"></span><span class="dset on"></span><span class="dset on"></span><span class="dset on"></span><span class="dset on"></span><span class="dset on"></span><span class="dset"></span><span class="dset"></span>
+            <b class="mono">6/8</b>
+          </div>
+          <div class="dots-row">
+            <span class="mono"><span lang="tr">doğruluk</span><span lang="en">accuracy</span></span>
+            <span class="dset on"></span><span class="dset on"></span><span class="dset on"></span><span class="dset on"></span><span class="dset on"></span><span class="dset on"></span><span class="dset"></span><span class="dset"></span>
+            <b class="mono">6/8</b>
+          </div>
+          <p class="viz-note mono"><span lang="tr">iyileşen veri seti sayısı</span><span lang="en">datasets improved</span></p>
+        </div>
+
+        <p lang="tr">Eğitim platolarından kaçmak için Adam üzerine kurulu, <strong>doğrulama güdümlü bir yerel arama</strong> yöntemi. En iyi doğrulama kaybı ve doğruluk 8 veri setinin 6’sında iyileşti (ort. Δkayıp ≈ 0,0172; Δdoğruluk ≈ 0,49 yp). Deney tasarımı, ablasyon çalışmaları ve çok sayıda veri seti üzerinde titiz nicel değerlendirme.</p>
+        <p lang="en">A <strong>validation-driven local search</strong> method built on Adam to escape training plateaus. Best validation loss and accuracy improved on 6 of 8 datasets (avg. Δloss ≈ 0.0172; Δacc ≈ 0.49 pp). Experimental design, ablation studies and rigorous quantitative evaluation across many datasets.</p>
+
+        <div class="pub-links">
+          <a class="link-chip" href="https://zenodo.org/records/18076853" target="_blank" rel="noopener">Zenodo <svg class="ic"><use href="#i-arrow"/></svg></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ IV projects ============ -->
+<section class="section" id="projects" data-art="aqueduct">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <span class="sec-idx">IV</span>
+      <h2 class="sec-title"><span lang="tr">Projeler &amp; Açık Kaynak</span><span lang="en">Projects &amp; Open Source</span></h2>
+      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+    </header>
+
+    <div class="projects">
+      <a class="project card reveal" href="https://github.com/CengizhanBayram/TeknofestHackathonLawLanguageMotion" target="_blank" rel="noopener">
+        <p class="project-tag mono">TEKNOFEST · Finalist</p>
+        <h3><span lang="tr">Hukuk NLP Asistanı</span><span lang="en">Legal NLP Assistant</span></h3>
+        <p lang="tr">TEKNOFEST finaline kalan, hukuk alanına özgü bir doğal dil işleme asistanı.</p>
+        <p lang="en">A domain-specific legal NLP assistant that reached the TEKNOFEST finals.</p>
+        <span class="project-go mono">GitHub <svg class="ic"><use href="#i-arrow"/></svg></span>
+      </a>
+      <div class="project card reveal">
+        <p class="project-tag mono">TTS · <span lang="tr">Ses klonlama</span><span lang="en">Voice cloning</span></p>
+        <h3>Turkish Orpheus TTS</h3>
+        <p lang="tr">Türkçe ses klonlama çalışması — kod GitHub’da, model Hugging Face’te açık kaynak.</p>
+        <p lang="en">Turkish voice cloning — code on GitHub and model on Hugging Face, both open source.</p>
+        <span class="project-links">
+          <a class="project-go mono" href="https://github.com/CengizhanBayram/Orpheus_TTS" target="_blank" rel="noopener"><span lang="tr">Kod</span><span lang="en">Code</span> <svg class="ic"><use href="#i-arrow"/></svg></a>
+          <a class="project-go mono" href="https://huggingface.co/Cosmobillian/turkish_orpheus_tts" target="_blank" rel="noopener">Model <svg class="ic"><use href="#i-arrow"/></svg></a>
+        </span>
+      </div>
+      <a class="project card reveal" href="https://github.com/CengizhanBayram/Does-RoPE-Prevent-or-Degrade-Retrieval-Heads-A-Mechanistic-Analysis-Across-Model-Families" target="_blank" rel="noopener">
+        <p class="project-tag mono"><span lang="tr">Mekanistik yorumlanabilirlik</span><span lang="en">Mech. interpretability</span></p>
+        <h3>RoPE × Retrieval Heads</h3>
+        <p lang="tr">Beş model ailesi için eşleştirilmiş tohumlu, tekrarlanabilir deney altyapısı ve kodun tamamı.</p>
+        <p lang="en">Full code and paired-seed, reproducible experiment infrastructure across five model families.</p>
+        <span class="project-go mono">GitHub <svg class="ic"><use href="#i-arrow"/></svg></span>
+      </a>
+      <a class="project card reveal" href="https://github.com/CengizhanBayram/pala_algorithm" target="_blank" rel="noopener">
+        <p class="project-tag mono"><span lang="tr">Optimizasyon</span><span lang="en">Optimization</span></p>
+        <h3>PALA</h3>
+        <p lang="tr">Adam ailesi için plato farkındalıklı, uyarlanabilir öğrenme oranı sarmalayıcısı.</p>
+        <p lang="en">A plateau-aware, adaptive learning-rate wrapper for Adam-family optimizers.</p>
+        <span class="project-go mono">GitHub <svg class="ic"><use href="#i-arrow"/></svg></span>
+      </a>
+      <a class="project card reveal" href="https://huggingface.co/Cosmobillian" target="_blank" rel="noopener">
+        <p class="project-tag mono">Hugging Face</p>
+        <h3>Cosmobillian</h3>
+        <p lang="tr">Hugging Face üzerinde yayımladığım açık kaynak modeller.</p>
+        <p lang="en">Open-source models I have published on Hugging Face.</p>
+        <span class="project-go mono">Hugging Face <svg class="ic"><use href="#i-arrow"/></svg></span>
+      </a>
+      <a class="project card reveal" href="https://medium.com/@cenghanbayram35" target="_blank" rel="noopener">
+        <p class="project-tag mono"><span lang="tr">Yazılar</span><span lang="en">Writing</span></p>
+        <h3>Medium</h3>
+        <p lang="tr">Medium’daki yazılarım.</p>
+        <p lang="en">My writing on Medium.</p>
+        <span class="project-go mono">Medium <svg class="ic"><use href="#i-arrow"/></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ V education ============ -->
+<section class="section" id="education" data-art="temple">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <span class="sec-idx">V</span>
+      <h2 class="sec-title"><span lang="tr">Eğitim</span><span lang="en">Education</span></h2>
+      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+    </header>
+
+    <div class="edu">
+      <article class="edu-card card reveal">
+        <p class="edu-date mono"><span lang="tr">Eyl 2026 — Devam</span><span lang="en">Sep 2026 — Present</span></p>
+        <h3><span lang="tr">Bilgisayar Mühendisliği Tezli Yüksek Lisans</span><span lang="en">M.Sc. in Computer Engineering (Thesis)</span></h3>
+        <p class="edu-school">
+          <span lang="tr">Konya Teknik Üniversitesi, Lisansüstü Eğitim Enstitüsü</span>
+          <span lang="en">Konya Technical University, Graduate School</span>
+          <span class="mono">· Konya</span>
+        </p>
+        <p class="edu-focus">
+          <span class="mono focus-label"><span lang="tr">Araştırma odağı</span><span lang="en">Research focus</span></span>
+          <span lang="tr">Büyük dil modellerinde verimlilik (nicemleme, speculative decoding), RAG sistemleri ve mekanistik yorumlanabilirlik.</span>
+          <span lang="en">Efficiency in large language models (quantization, speculative decoding), RAG systems and mechanistic interpretability.</span>
+        </p>
+      </article>
+
+      <article class="edu-card card reveal">
+        <p class="edu-date mono">2020 — 2025</p>
+        <h3><span lang="tr">Bilgisayar Mühendisliği Lisans (%100 İngilizce)</span><span lang="en">B.Sc. in Computer Engineering (100% English)</span></h3>
+        <p class="edu-school">
+          <span lang="tr">Manisa Celal Bayar Üniversitesi</span>
+          <span lang="en">Manisa Celal Bayar University</span>
+          <span class="mono">· Manisa</span>
+        </p>
+        <ul class="edu-badges">
+          <li><span class="mono"><span lang="tr">GNO</span><span lang="en">GPA</span></span> <b><span lang="tr">3,01</span><span lang="en">3.01</span></b> / <span lang="tr">4,00</span><span lang="en">4.00</span></li>
+          <li><svg class="ic"><use href="#i-hedera"/></svg> <span lang="tr">Onur Belgesi</span><span lang="en">Honor Certificate</span></li>
+        </ul>
+        <p lang="tr" class="edu-note">Eğitim dili İngilizce. Kapsamlı müfredatın yanı sıra veri bilimi, makine öğrenmesi ve NLP alanlarında bireysel projeler.</p>
+        <p lang="en" class="edu-note">Language of instruction: English. Individual projects in data science, machine learning and NLP alongside the core curriculum.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VI experience ============ -->
+<section class="section" id="experience" data-art="sundial">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <span class="sec-idx">VI</span>
+      <h2 class="sec-title"><span lang="tr">İş Deneyimi</span><span lang="en">Experience</span></h2>
+      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+    </header>
+
+    <ol class="timeline">
+      <li class="tl-item reveal">
+        <p class="tl-date mono"><span lang="tr">Ara 2025 — May 2026</span><span lang="en">Dec 2025 — May 2026</span></p>
+        <span class="tl-node" aria-hidden="true"></span>
+        <div class="tl-body">
+          <h3 class="tl-role"><span lang="tr">Makine Öğrenmesi Mühendisi</span><span lang="en">Machine Learning Engineer</span></h3>
+          <p class="tl-org">Mergenova Yazılım <span class="mono">· İzmir</span></p>
+          <ul class="tl-points">
+            <li lang="tr">Canlı ortama hazır <strong>veri hatları ve makine öğrenmesi sistemleri</strong> geliştirdim ve bakımını yaptım; ölçülebilir performans artışı ve dağıtım verimliliğine odaklandım.</li>
+            <li lang="en">Built and maintained production-ready <strong>data pipelines and ML systems</strong>, focused on measurable performance gains and deployment efficiency.</li>
+            <li lang="tr">Gerçek üretim koşullarında modelleme, veri kalitesi ve gecikme dengeleri üzerine <strong>yinelemeli deney ve değerlendirme</strong> süreçleri yürüttüm.</li>
+            <li lang="en">Ran <strong>iterative experimentation and evaluation</strong> on modeling, data quality and latency trade-offs under real production conditions.</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="tl-item reveal">
+        <p class="tl-date mono"><span lang="tr">Şub — Ağu 2025</span><span lang="en">Feb — Aug 2025</span></p>
+        <span class="tl-node" aria-hidden="true"></span>
+        <div class="tl-body">
+          <h3 class="tl-role"><span lang="tr">Yapay Zekâ Mühendisi</span><span lang="en">AI Engineer</span></h3>
+          <p class="tl-org">Enm Digital <span class="mono">· Manisa</span></p>
+          <ul class="metrics">
+            <li><b>+50%</b> <span lang="tr">model etkinliği</span><span lang="en">model effectiveness</span></li>
+            <li><b>+30%</b> <span lang="tr">TTS kalitesi</span><span lang="en">TTS quality</span></li>
+            <li><b>+20%</b> <span lang="tr">Whisper performansı</span><span lang="en">Whisper performance</span></li>
+          </ul>
+          <ul class="tl-points">
+            <li lang="tr">Kurumsal bir <strong>RAG hattı</strong> (retriever + re-ranker + önbellek) tasarlayıp sistematik ablasyon çalışmalarıyla değerlendirdim; titiz hata analizi ve veri odaklı iterasyonla model etkinliğinde %50, TTS kalitesinde %30 ve Whisper performansında %20 iyileşme sağladım.</li>
+            <li lang="en">Designed an enterprise <strong>RAG pipeline</strong> (retriever + re-ranker + cache) and evaluated it through systematic ablations; rigorous error analysis and data-driven iteration delivered a 50% improvement in model effectiveness, 30% in TTS quality and 20% in Whisper performance.</li>
+            <li lang="tr"><strong>Whisper + TTS</strong> ile eller serbest sesli kullanıcı deneyimi prototipi geliştirdim; gecikme ölçümü ve dayanıklılığa odaklandım. Türkçe ses klonlama çıktılarını açık kaynak olarak yayımladım: <a href="https://github.com/CengizhanBayram/Orpheus_TTS" target="_blank" rel="noopener">kod</a> ve <a href="https://huggingface.co/Cosmobillian/turkish_orpheus_tts" target="_blank" rel="noopener">model</a>.</li>
+            <li lang="en">Built a hands-free voice UX prototype with <strong>Whisper + TTS</strong>, focusing on latency measurement and robustness. Open-sourced the Turkish voice-cloning outputs: <a href="https://github.com/CengizhanBayram/Orpheus_TTS" target="_blank" rel="noopener">code</a> and <a href="https://huggingface.co/Cosmobillian/turkish_orpheus_tts" target="_blank" rel="noopener">model</a>.</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="tl-item reveal">
+        <p class="tl-date mono"><span lang="tr">Ağu — Eyl 2023</span><span lang="en">Aug — Sep 2023</span></p>
+        <span class="tl-node" aria-hidden="true"></span>
+        <div class="tl-body">
+          <h3 class="tl-role"><span lang="tr">Ar-Ge &amp; Görüntü İşleme Stajyeri</span><span lang="en">R&amp;D &amp; Image Processing Intern</span></h3>
+          <p class="tl-org">ASELSAN Konya <span class="mono">· Konya</span></p>
+          <ul class="tl-points">
+            <li lang="tr">Savunma sektörüne yönelik Ar-Ge projelerinde <strong>bilgisayarlı görü</strong> ve veri odaklı analitik sistemler üzerinde çalıştım; güvenlik açısından kritik ortamlarda üretim seviyesindeki kalite gereksinimlerini deneyimledim.</li>
+            <li lang="en">Worked on <strong>computer vision</strong> and data-driven analytics systems in defense R&amp;D projects; experienced production-grade quality requirements in safety-critical environments.</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ VII skills ============ -->
+<section class="section" id="skills" data-art="mosaic">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <span class="sec-idx">VII</span>
+      <h2 class="sec-title"><span lang="tr">Beceriler &amp; Diller</span><span lang="en">Skills &amp; Languages</span></h2>
+      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+    </header>
+
+    <div class="skills-grid">
+      <dl class="skills reveal">
+        <div class="skill-row">
+          <dt class="mono"><span lang="tr">Programlama</span><span lang="en">Programming</span></dt>
+          <dd><ul class="chips"><li>Python</li><li>C/C++</li><li>SQL</li><li>Assembly</li></ul></dd>
+        </div>
+        <div class="skill-row">
+          <dt class="mono"><span lang="tr">YZ / MÖ</span><span lang="en">AI / ML</span></dt>
+          <dd><ul class="chips"><li>PyTorch</li><li>TensorFlow</li><li>TensorRT</li><li>ONNX</li><li>OpenCV</li><li>LangChain</li></ul></dd>
+        </div>
+        <div class="skill-row">
+          <dt class="mono"><span lang="tr">Veri Bilimi</span><span lang="en">Data Science</span></dt>
+          <dd><ul class="chips"><li>Pandas</li><li>NumPy</li><li>scikit-learn</li><li>Seaborn</li><li>Matplotlib</li><li>Jupyter</li><li>REST API</li><li>Web Scraping</li><li>BeautifulSoup</li><li>Requests</li></ul></dd>
+        </div>
+        <div class="skill-row">
+          <dt class="mono">MLOps</dt>
+          <dd><ul class="chips"><li>Git</li><li>CMake</li><li>Flask</li><li>SerpAPI</li></ul></dd>
+        </div>
+        <div class="skill-row">
+          <dt class="mono"><span lang="tr">Bulut</span><span lang="en">Cloud</span></dt>
+          <dd><ul class="chips"><li>Microsoft Azure</li><li>Azure ML</li><li>Azure OpenAI</li><li>Azure AI Foundry</li></ul></dd>
+        </div>
+      </dl>
+
+      <div class="langs card reveal">
+        <h3 class="langs-title"><span lang="tr">Yabancı Diller</span><span lang="en">Languages</span></h3>
+        <ul class="lang-list">
+          <li>
+            <span class="lang-name"><span lang="tr">Türkçe</span><span lang="en">Turkish</span></span>
+            <span class="cefr" data-lv="6" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="lang-lv mono"><span lang="tr">Ana dil</span><span lang="en">Native</span></span>
+          </li>
+          <li>
+            <span class="lang-name"><span lang="tr">İngilizce</span><span lang="en">English</span></span>
+            <span class="cefr" data-lv="5" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="lang-lv mono">C1 · <span lang="tr">İleri</span><span lang="en">Advanced</span></span>
+          </li>
+          <li>
+            <span class="lang-name"><span lang="tr">Almanca</span><span lang="en">German</span></span>
+            <span class="cefr" data-lv="2" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="lang-lv mono">A2 · <span lang="tr">Temel</span><span lang="en">Elementary</span></span>
+          </li>
+        </ul>
+        <p class="cefr-scale mono" aria-hidden="true"><span>A1</span><span>A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIII contact ============ -->
+<section class="section contact" id="contact" data-art="laurel">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <span class="sec-idx">VIII</span>
+      <h2 class="sec-title"><span lang="tr">İletişim</span><span lang="en">Contact</span></h2>
+      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+    </header>
+
+    <div class="contact-inner reveal">
+      <p class="contact-big">
+        <span lang="tr">Birlikte bir şeyler <em>inşa edelim.</em></span>
+        <span lang="en">Let’s <em>build something</em> together.</span>
+      </p>
+      <p class="contact-sub">
+        <span lang="tr">Araştırma iş birlikleri, NLP/LLM projeleri ya da sadece bir sohbet için yazabilirsiniz.</span>
+        <span lang="en">Reach out for research collaborations, NLP/LLM projects or just a conversation.</span>
+      </p>
+
+      <div class="email-row">
+        <a class="email" href="mailto:cengizhanbayramtr@gmail.com">cengizhanbayramtr@gmail.com</a>
+        <button class="copy" id="copy-email" type="button" data-email="cengizhanbayramtr@gmail.com">
+          <svg class="ic"><use href="#i-copy"/></svg>
+          <span class="copy-label"><span lang="tr">kopyala</span><span lang="en">copy</span></span>
+          <span class="copy-done"><span lang="tr">kopyalandı</span><span lang="en">copied</span></span>
+        </button>
+      </div>
+
+      <ul class="contact-links">
+        <li><a href="https://github.com/CengizhanBayram" target="_blank" rel="noopener"><svg class="ic"><use href="#i-github"/></svg> GitHub <span class="mono">CengizhanBayram</span></a></li>
+        <li><a href="https://www.linkedin.com/in/cengizhan-bayram" target="_blank" rel="noopener"><svg class="ic"><use href="#i-linkedin"/></svg> LinkedIn <span class="mono">cengizhan-bayram</span></a></li>
+        <li><a href="https://orcid.org/0009-0002-3915-6881" target="_blank" rel="noopener"><svg class="ic"><use href="#i-orcid"/></svg> ORCID <span class="mono">0009-0002-3915-6881</span></a></li>
+        <li><a href="https://huggingface.co/Cosmobillian" target="_blank" rel="noopener"><svg class="ic"><use href="#i-hf"/></svg> Hugging Face <span class="mono">Cosmobillian</span></a></li>
+        <li><a href="https://medium.com/@cenghanbayram35" target="_blank" rel="noopener"><svg class="ic"><use href="#i-medium"/></svg> Medium <span class="mono">@cenghanbayram35</span></a></li>
+        <li><a href="assets/cv/cengizhan-bayram-cv-tr.pdf" target="_blank" rel="noopener"><svg class="ic"><use href="#i-down"/></svg> CV <span class="mono">PDF · TR</span></a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="meander" aria-hidden="true"></div>
+  <div class="wrap footer-inner">
+    <p>© <span id="year">2026</span> Cengizhan Bayram</p>
+    <a class="mono to-top" href="#top"><span lang="tr">başa dön ↑</span><span lang="en">back to top ↑</span></a>
+  </div>
+</footer>
+
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>
