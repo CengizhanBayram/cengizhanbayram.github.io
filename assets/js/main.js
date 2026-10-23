@@ -330,7 +330,7 @@
 
   /* ---------- portrait: gold halftone that is struck into the coin, then resolves to the photo ---------- */
   function initPortrait() {
-    const host = $('#coin'), coin = $('.coin'), cv = $('#portrait-dots'), img = $('#portrait-img');
+    const host = $('#coin'), coin = $('.coin-tilt'), cv = $('#portrait-dots'), img = $('#portrait-img');
     if (!host || !cv || !img) return;
     requestAnimationFrame(() => requestAnimationFrame(() => host.classList.add('ready')));
 
@@ -443,7 +443,7 @@
       if (!e) { coin.style.transform = ''; return; }
       const r = host.getBoundingClientRect();
       const nx = (e.clientX - r.left) / r.width - 0.5, ny = (e.clientY - r.top) / r.height - 0.5;
-      coin.style.transform = `perspective(900px) rotateY(${(nx * 14).toFixed(2)}deg) rotateX(${(-ny * 14).toFixed(2)}deg)`;
+      coin.style.transform = `rotateY(${(nx * 14).toFixed(2)}deg) rotateX(${(-ny * 14).toFixed(2)}deg)`;
     }
 
     function start() {
@@ -475,7 +475,7 @@
         if (e.pointerType === 'mouse') { hovering = false; if (phase === 'live') showPhoto(true); }
       });
       host.addEventListener('pointerup', (e) => {
-        if (e.pointerType === 'mouse' || phase !== 'live') return;
+        if (e.pointerType === 'mouse' || phase !== 'live' || host.classList.contains('flipped')) return;
         showPhoto(!host.classList.contains('show-photo'));
       });
 
@@ -494,6 +494,48 @@
       img.addEventListener('load', start, { once: true });
       img.addEventListener('error', () => host.classList.add('no-dots'), { once: true });
     }
+  }
+
+  /* ---------- easter egg: type "bjk" or "1903" (or long-press the coin) to turn it over ---------- */
+  function initCoinFlip() {
+    const host = $('#coin');
+    if (!host) return;
+
+    let flippedAt = 0;
+    const flip = (v) => {
+      host.classList.toggle('flipped', v);
+      if (v) flippedAt = performance.now();
+    };
+    const reveal = () => {
+      const r = host.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) {
+        scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+        setTimeout(() => flip(true), reduceMotion ? 0 : 700);
+      } else flip(true);
+    };
+
+    let typed = '';
+    addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { flip(false); return; }
+      if (e.ctrlKey || e.metaKey || e.altKey || e.key.length !== 1) return;
+      typed = (typed + e.key.toLowerCase()).slice(-4);
+      if (typed.endsWith('bjk') || typed === '1903') { typed = ''; reveal(); }
+    });
+
+    // touch screens: press and hold the coin
+    let hold = 0;
+    host.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse') return;
+      clearTimeout(hold);
+      hold = setTimeout(() => flip(!host.classList.contains('flipped')), 650);
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach((t) => host.addEventListener(t, () => clearTimeout(hold)));
+    host.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // a click on the reverse turns it back (but not the click that ends a long press)
+    host.addEventListener('click', () => {
+      if (host.classList.contains('flipped') && performance.now() - flippedAt > 500) flip(false);
+    });
   }
 
   /* ---------- fig. II: retrieval-head masking ---------- */
@@ -631,6 +673,7 @@
   buildLaurel();
   initSectionArt();
   initPortrait();
+  initCoinFlip();
   initRopeFigure();
   initCounters();
   initMarquee();

@@ -322,6 +322,7 @@ html[data-lang="en"] .lang [data-l="en"] { color: var(--gold-2); }
   margin: 52px 0 40px;
   cursor: crosshair;
   -webkit-tap-highlight-color: transparent;
+  perspective: 1000px;
 }
 .laurel {
   position: absolute; left: 50%; top: 50%;
@@ -336,6 +337,18 @@ html[data-lang="en"] .lang [data-l="en"] { color: var(--gold-2); }
 :is(.laurel, .art-laurel) .sprig { transform-box: fill-box; transform-origin: center; }
 .js :is(.laurel, .art-laurel) .sprig { opacity: 0; transform: scale(0.2); transition: opacity 0.6s var(--ease), transform 0.9s var(--ease); transition-delay: var(--dl, 0s); }
 .js .ready .laurel .sprig, .js .art-laurel.ready .sprig { opacity: 1; transform: none; }
+
+/* easter egg: typing "bjk" or "1903" (or a long press) turns the coin over */
+.coin-tilt, .coin-flip { position: absolute; inset: 0; transform-style: preserve-3d; }
+.coin-tilt { transition: transform 0.4s var(--ease); }
+.coin-flip { transition: transform 1.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+.coin-wrap.flipped .coin-flip { transform: rotateY(180deg); }
+.coin-front, .coin-back { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.coin-back { transform: rotateY(180deg); }
+.coin-wrap { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.coin-back .coin-rim .beads { stroke: #1d1916; }
+.coin-back .coin-rim .legend { fill: #1d1916; }
+.coin-back .coin-rim .inner-ring { stroke: #1d1916; }
 
 .coin {
   position: absolute; inset: 0;
@@ -812,7 +825,7 @@ html[data-lang="en"] .lang [data-l="en"] { color: var(--gold-2); }
 @keyframes glint { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; fill: var(--gold-2); } }
 .art-mosaic .tiles { transform-box: view-box; transform-origin: 50% 50%; animation: spin 260s linear infinite; }
 .art-mosaic .petal { fill: none; stroke: var(--red-2); stroke-width: 1.4; }
-.art-laurel { --op: 0.45; right: max(-50px, -4vw); top: 50%; width: min(600px, 58vw); aspect-ratio: 1; margin-top: calc(min(600px, 58vw) / -2); }
+.art-laurel { --op: 0.45; right: 1vw; top: 50%; width: min(540px, 46vw); aspect-ratio: 1; margin-top: calc(min(540px, 46vw) / -2); }
 
 /* ---------- footer ---------- */
 .footer { padding: 0 0 36px; }

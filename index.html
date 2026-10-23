@@ -84,6 +84,11 @@
       <stop offset=".82" stop-color="#ecca7c"/>
       <stop offset="1" stop-color="#a87a2c"/>
     </linearGradient>
+    <radialGradient id="g-ivory" cx=".5" cy=".4" r=".65">
+      <stop offset="0" stop-color="#fdfaf3"/>
+      <stop offset=".75" stop-color="#efe6d4"/>
+      <stop offset="1" stop-color="#ddd0b6"/>
+    </radialGradient>
     <radialGradient id="g-field" cx=".5" cy=".42" r=".62">
       <stop offset="0" stop-color="#3a2a1a"/>
       <stop offset=".7" stop-color="#1a120c"/>
@@ -183,7 +188,8 @@
       <div class="coin-wrap" id="coin">
         <svg class="laurel" id="laurel" viewBox="-300 -300 600 600" aria-hidden="true"></svg>
 
-        <div class="coin">
+        <div class="coin-tilt"><div class="coin-flip">
+        <div class="coin coin-front">
           <svg class="coin-rim" viewBox="0 0 400 400" aria-hidden="true">
             <defs>
               <path id="legend-path" d="M200 200m-164 0a164 164 0 1 1 328 0 164 164 0 1 1-328 0"/>
@@ -205,6 +211,23 @@
           </div>
           <div class="coin-sheen" aria-hidden="true"></div>
         </div>
+          <div class="coin coin-back" aria-hidden="true">
+            <svg class="coin-rim" viewBox="0 0 400 400">
+              <defs>
+                <path id="legend-path-back" d="M200 200m-164 0a164 164 0 1 1 328 0 164 164 0 1 1-328 0"/>
+              </defs>
+              <circle cx="200" cy="200" r="198" fill="url(#g-gold)"/>
+              <circle cx="200" cy="200" r="191" fill="none" stroke="#5c4018" stroke-width="1.2" opacity=".7"/>
+              <circle cx="200" cy="200" r="189" fill="url(#g-ivory)"/>
+              <circle class="beads" cx="200" cy="200" r="182"/>
+              <g class="legend-rot">
+                <text class="legend"><textPath href="#legend-path-back" textLength="1020" lengthAdjust="spacing">BEŞİKTAŞ · KARA KARTAL · MCMIII · BEŞİKTAŞ · KARA KARTAL · MCMIII ·</textPath></text>
+              </g>
+              <circle class="inner-ring" cx="200" cy="200" r="151"/>
+              <image class="rev-logo" href="assets/img/bjk.webp" x="105" y="86" width="190" height="228" preserveAspectRatio="xMidYMid meet"/>
+            </svg>
+          </div>
+        </div></div>
       </div>
       <p class="fig-cap mono">
         <span class="fig-no">fig. I</span>
