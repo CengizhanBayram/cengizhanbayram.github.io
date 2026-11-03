@@ -6,8 +6,8 @@
   <title>Cengizhan Bayram — LLM Efficiency · NLP Research</title>
   <meta name="description" content="Cengizhan Bayram — LLM verimliliği araştırmacısı: nicemleme, speculative decoding, çıkarım optimizasyonu; RAG ve mekanistik yorumlanabilirlik. / LLM efficiency researcher: quantization, speculative decoding, inference optimization; RAG and mechanistic interpretability.">
   <meta name="author" content="Cengizhan Bayram">
-  <meta name="theme-color" content="#0c0a08">
   <link rel="canonical" href="https://cengizhanbayram.github.io/">
+  <meta name="theme-color" content="#1c2320">
   <link rel="icon" href="assets/img/favicon-96.png" sizes="96x96" type="image/png">
   <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -32,8 +32,9 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400..500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <link rel="stylesheet" href="assets/css/board.css">
 
   <script type="application/ld+json">
   {
@@ -60,13 +61,8 @@
 </head>
 <body>
 
-<!-- ============ shared SVG defs ============ -->
 <svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
   <defs>
-    <!-- hedera: the ivy-leaf word divider of Roman inscriptions -->
-    <symbol id="i-hedera" viewBox="-12 -12 24 24">
-      <path d="M-9.5 0C-9.5-6.2-3.6-9.6 1-6.6 2.4-9.4 6.6-9.8 8.4-6.8 10.2-3.8 8.2-.6 11 0 8.2.6 10.2 3.8 8.4 6.8 6.6 9.8 2.4 9.4 1 6.6-3.6 9.6-9.5 6.2-9.5 0Z"/>
-    </symbol>
     <symbol id="i-github" viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.11.82-.26.82-.58l-.02-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.33-1.76-1.33-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .32.21.7.82.58A12 12 0 0 0 12 .3"/></symbol>
     <symbol id="i-linkedin" viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13Zm1.78 13.02H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></symbol>
     <symbol id="i-orcid" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 1a11 11 0 1 0 0 22 11 11 0 0 0 0-22ZM7 5.2a1.15 1.15 0 1 0 0 2.3 1.15 1.15 0 0 0 0-2.3ZM6.1 8.6v9h1.8v-9H6.1Zm4 0v9h3.6c3 0 4.9-2 4.9-4.5s-1.9-4.5-4.9-4.5h-3.6Zm1.8 1.6h1.7c2 0 3.1 1.3 3.1 2.9S15.6 16 13.6 16h-1.7v-5.8Z"/></symbol>
@@ -76,41 +72,32 @@
     <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M7 17 17 7M9 7h8v8"/></symbol>
     <symbol id="i-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M12 4v12m-5-5 5 5 5-5M5 20h14"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M8 8h11v12H8z M5 16V4h11"/></symbol>
-
-    <linearGradient id="g-gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f7e4a8"/>
-      <stop offset=".32" stop-color="#cfa04a"/>
-      <stop offset=".58" stop-color="#8c6426"/>
-      <stop offset=".82" stop-color="#ecca7c"/>
-      <stop offset="1" stop-color="#a87a2c"/>
-    </linearGradient>
-    <radialGradient id="g-ivory" cx=".5" cy=".4" r=".65">
-      <stop offset="0" stop-color="#fdfaf3"/>
-      <stop offset=".75" stop-color="#efe6d4"/>
-      <stop offset="1" stop-color="#ddd0b6"/>
-    </radialGradient>
-    <radialGradient id="g-field" cx=".5" cy=".42" r=".62">
-      <stop offset="0" stop-color="#3a2a1a"/>
-      <stop offset=".7" stop-color="#1a120c"/>
-      <stop offset="1" stop-color="#0e0a07"/>
-    </radialGradient>
+    <!-- chalk: grainy holes punched through the stroke, edges wobbled a little -->
+    <filter id="chalk" x="-4%" y="-8%" width="108%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="7" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.05 1.32" result="mask"/>
+      <feComposite in="SourceGraphic" in2="mask" operator="in" result="dusty"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="3" result="warp"/>
+      <feDisplacementMap in="dusty" in2="warp" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="chalk-fine" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.7" numOctaves="2" seed="11" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.38" result="mask"/>
+      <feComposite in="SourceGraphic" in2="mask" operator="in"/>
+    </filter>
   </defs>
 </svg>
 
-<!-- ============ backdrop ============ -->
-<div class="bg-wash" aria-hidden="true"></div>
-<div class="grain" aria-hidden="true"></div>
-<div class="vignette" aria-hidden="true"></div>
+<div class="board" aria-hidden="true"></div>
 
 <a class="skip" href="#research"><span lang="tr">İçeriğe geç</span><span lang="en">Skip to content</span></a>
 
-<!-- ============ nav ============ -->
 <header class="nav" id="nav">
   <div class="progress" id="progress"></div>
   <div class="nav-inner">
-    <a class="brand" href="#top" aria-label="Cengizhan Bayram">
-      <img class="brand-coin" src="assets/img/emblem-128.png" alt="" width="40" height="40">
-      <span class="brand-text">Cengizhan Bayram</span>
+    <a class="brand" href="#top">
+      <span class="brand-name chalk">C. Bayram</span>
+      <span class="brand-sub mono">∂ notes on LLM efficiency</span>
     </a>
     <nav class="nav-links" id="nav-links" aria-label="Site">
       <a href="#research"><span lang="tr">Araştırma</span><span lang="en">Research</span></a>
@@ -133,19 +120,20 @@
 
 <main>
 
-<!-- ============ hero ============ -->
-<section class="hero" id="top">
+<!-- ============ the board ============ -->
+<section class="hero chapter" id="top">
   <div class="wrap hero-grid">
     <div class="hero-text">
       <a class="latest reveal" href="https://arxiv.org/abs/2606.21249" target="_blank" rel="noopener">
-        <span class="latest-tag mono"><span lang="tr">Yeni ön baskı</span><span lang="en">New preprint</span></span>
+        <span class="latest-tag hand"><span lang="tr">yeni ön baskı!</span><span lang="en">new preprint!</span></span>
         <span class="latest-title">Does RoPE Prevent or Degrade Retrieval Heads?</span>
         <svg class="ic"><use href="#i-arrow"/></svg>
       </a>
 
       <h1 class="hero-name" aria-label="Cengizhan Bayram">
-        <span class="line split">Cengizhan</span>
-        <span class="line split accent">Bayram</span>
+        <span class="line chalk split">Cengizhan</span>
+        <span class="line chalk split accent">Bayram</span>
+        <svg class="slashes" aria-hidden="true"></svg>
       </h1>
 
       <p class="hero-role mono">
@@ -158,18 +146,12 @@
         <span lang="en">I work on <em>LLM efficiency</em>: making large language models faster and lighter through quantization, speculative decoding and inference optimization — alongside RAG systems and mechanistic interpretability.</span>
       </p>
 
-      <p class="hero-now mono reveal">
-        <span class="pulse" aria-hidden="true"></span>
-        <span lang="tr">Şu an: Tezli Yüksek Lisans @ KTÜN</span>
-        <span lang="en">Now: M.Sc. (thesis) @ KTUN</span>
-      </p>
-
       <div class="hero-cta reveal">
-        <a class="btn btn-gold" href="#publications">
+        <a class="btn btn-chalk" href="#publications">
           <span lang="tr">Araştırmayı keşfet</span><span lang="en">Explore the research</span>
           <svg class="ic"><use href="#i-arrow"/></svg>
         </a>
-        <a class="btn btn-ghost" href="#contact">
+        <a class="btn btn-line" href="#contact">
           <svg class="ic"><use href="#i-mail"/></svg> <span lang="tr">İletişim</span><span lang="en">Contact</span>
         </a>
       </div>
@@ -184,88 +166,39 @@
       </ul>
     </div>
 
-    <div class="hero-art">
-      <div class="coin-wrap" id="coin">
-        <svg class="laurel" id="laurel" viewBox="-300 -300 600 600" aria-hidden="true"></svg>
-
-        <div class="coin-tilt"><div class="coin-flip">
-        <div class="coin coin-front">
-          <svg class="coin-rim" viewBox="0 0 400 400" aria-hidden="true">
-            <defs>
-              <path id="legend-path" d="M200 200m-164 0a164 164 0 1 1 328 0 164 164 0 1 1-328 0"/>
-            </defs>
-            <circle cx="200" cy="200" r="198" fill="url(#g-gold)"/>
-            <circle cx="200" cy="200" r="191" fill="none" stroke="#5c4018" stroke-width="1.2" opacity=".7"/>
-            <circle cx="200" cy="200" r="189" fill="url(#g-field)"/>
-            <circle class="beads" cx="200" cy="200" r="182"/>
-            <g class="legend-rot">
-              <text class="legend"><textPath href="#legend-path" textLength="1020" lengthAdjust="spacing">CENGIZHAN · BAYRAM · LLM · EFFICIENCY · MMXXVI ·</textPath></text>
-            </g>
-            <circle class="inner-ring" cx="200" cy="200" r="151"/>
-          </svg>
-
-          <div class="coin-field">
-            <div class="field-halo"></div>
-            <canvas class="portrait-dots" id="portrait-dots" aria-hidden="true"></canvas>
-            <img class="portrait-img" id="portrait-img" src="assets/img/portrait-cutout.webp" alt="Cengizhan Bayram" width="900" height="959" decoding="async">
-          </div>
-          <div class="coin-sheen" aria-hidden="true"></div>
-        </div>
-          <div class="coin coin-back" aria-hidden="true">
-            <svg class="coin-rim" viewBox="0 0 400 400">
-              <defs>
-                <path id="legend-path-back" d="M200 200m-164 0a164 164 0 1 1 328 0 164 164 0 1 1-328 0"/>
-              </defs>
-              <circle cx="200" cy="200" r="198" fill="url(#g-gold)"/>
-              <circle cx="200" cy="200" r="191" fill="none" stroke="#5c4018" stroke-width="1.2" opacity=".7"/>
-              <circle cx="200" cy="200" r="189" fill="url(#g-ivory)"/>
-              <circle class="beads" cx="200" cy="200" r="182"/>
-              <g class="legend-rot">
-                <text class="legend"><textPath href="#legend-path-back" textLength="1020" lengthAdjust="spacing">BEŞİKTAŞ · KARA KARTAL · MCMIII · BEŞİKTAŞ · KARA KARTAL · MCMIII ·</textPath></text>
-              </g>
-              <circle class="inner-ring" cx="200" cy="200" r="151"/>
-              <image class="rev-logo" href="assets/img/bjk.webp" x="105" y="86" width="190" height="228" preserveAspectRatio="xMidYMid meet"/>
-            </svg>
-          </div>
-        </div></div>
+    <figure class="portrait reveal" id="polaroid">
+      <div class="portrait-stage" id="portrait-stage">
+        <span class="mat-label chalk" aria-hidden="true">X =</span>
+        <img class="portrait-img" id="portrait-img" src="assets/img/portrait-cutout.webp" alt="Cengizhan Bayram" width="900" height="959">
+        <canvas class="portrait-tiles" id="portrait-tiles" aria-hidden="true"></canvas>
       </div>
-      <p class="fig-cap mono">
-        <span class="fig-no">fig. I</span>
-        <span lang="tr">portre, bir dikkat haritası olarak — üzerine gel / dokun</span>
-        <span lang="en">portrait as an attention map — hover / tap</span>
-      </p>
-    </div>
+      <figcaption class="hand chalk"><span lang="tr">fig. 1 — yazar, piksel piksel</span><span lang="en">fig. 1 — the author, pixel by pixel</span></figcaption>
+    </figure>
   </div>
-
-  <a class="scroll-cue mono" href="#research">
-    <span lang="tr">kaydır</span><span lang="en">scroll</span>
-    <span class="scroll-line"></span>
-  </a>
 </section>
 
-<!-- ============ marquee ============ -->
-<div class="marquee" aria-hidden="true">
+<!-- ============ a strip of formulas ============ -->
+<div class="strip" aria-hidden="true">
   <div class="marquee-track">
     <ul class="marquee-list">
-      <li><span lang="tr">LLM Verimliliği</span><span lang="en">LLM Efficiency</span></li>
-      <li><span lang="tr">Nicemleme</span><span lang="en">Quantization</span></li>
-      <li>Speculative Decoding</li>
-      <li><span lang="tr">Çıkarım Optimizasyonu</span><span lang="en">Inference Optimization</span></li>
-      <li><span lang="tr">Büyük Dil Modelleri</span><span lang="en">Large Language Models</span></li>
-      <li><span lang="tr">Mekanistik Yorumlanabilirlik</span><span lang="en">Mechanistic Interpretability</span></li>
-      <li>RAG</li>
-      <li><span lang="tr">Doğal Dil İşleme</span><span lang="en">Natural Language Processing</span></li>
+      <li>softmax(QKᵀ / √dₖ) V</li>
+      <li>θᵢ = 10000<sup>−2i/d</sup></li>
+      <li>ŵ = s · clip(⌊w/s⌉, −8, 7)</li>
+      <li>α = min(1, p(x) / q(x))</li>
+      <li>recall: 1.00 → 0.00</li>
+      <li>16 bit → 4 bit</li>
+      <li>p(y|x) = Σ<sub>z</sub> p(z|x) p(y|x, z)</li>
     </ul>
   </div>
 </div>
 
-<!-- ============ I research profile ============ -->
-<section class="section" id="research" data-art="armillary">
+<!-- ============ § 1 research profile ============ -->
+<section class="chapter" id="research">
   <div class="wrap">
     <header class="sec-head reveal">
-      <span class="sec-idx">I</span>
-      <h2 class="sec-title"><span lang="tr">Araştırma Profili</span><span lang="en">Research Profile</span></h2>
-      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+      <p class="sec-no"><span class="chalk">§1</span></p>
+      <h2 class="sec-title chalk"><span lang="tr">Araştırma Profili</span><span lang="en">Research Profile</span></h2>
+      <p class="sec-note hand"><span lang="tr">asıl problem: LLM verimsizliği</span><span lang="en">the real problem: LLM inefficiency</span></p>
     </header>
 
     <div class="about-grid">
@@ -355,13 +288,13 @@
   </div>
 </section>
 
-<!-- ============ II research interests ============ -->
-<section class="section" id="interests" data-art="euclid">
+<!-- ============ § 2 research interests ============ -->
+<section class="chapter" id="interests">
   <div class="wrap">
     <header class="sec-head reveal">
-      <span class="sec-idx">II</span>
-      <h2 class="sec-title"><span lang="tr">Araştırma İlgi Alanları</span><span lang="en">Research Interests</span></h2>
-      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+      <p class="sec-no"><span class="chalk">§2</span></p>
+      <h2 class="sec-title chalk"><span lang="tr">İlgi Alanları</span><span lang="en">Research Interests</span></h2>
+      <p class="sec-note hand"><span lang="tr">dört cephe</span><span lang="en">four fronts</span></p>
     </header>
 
     <div class="interests">
@@ -421,13 +354,13 @@
   </div>
 </section>
 
-<!-- ============ III publications ============ -->
-<section class="section" id="publications" data-art="dome">
+<!-- ============ § 3 publications ============ -->
+<section class="chapter" id="publications">
   <div class="wrap">
     <header class="sec-head reveal">
-      <span class="sec-idx">III</span>
-      <h2 class="sec-title"><span lang="tr">Yayınlar</span><span lang="en">Publications</span></h2>
-      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+      <p class="sec-no"><span class="chalk">§3</span></p>
+      <h2 class="sec-title chalk"><span lang="tr">Yayınlar</span><span lang="en">Publications</span></h2>
+      <p class="sec-note hand"><span lang="tr">1 hakemli + 3 ön baskı</span><span lang="en">1 peer-reviewed + 3 preprints</span></p>
     </header>
 
     <!-- featured: RoPE -->
@@ -600,13 +533,13 @@
   </div>
 </section>
 
-<!-- ============ IV projects ============ -->
-<section class="section" id="projects" data-art="aqueduct">
+<!-- ============ § 4 projects & open source ============ -->
+<section class="chapter" id="projects">
   <div class="wrap">
     <header class="sec-head reveal">
-      <span class="sec-idx">IV</span>
-      <h2 class="sec-title"><span lang="tr">Projeler &amp; Açık Kaynak</span><span lang="en">Projects &amp; Open Source</span></h2>
-      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+      <p class="sec-no"><span class="chalk">§4</span></p>
+      <h2 class="sec-title chalk"><span lang="tr">Projeler & Açık Kaynak</span><span lang="en">Projects & Open Source</span></h2>
+      <p class="sec-note hand"><span lang="tr">kodlar GitHub'da</span><span lang="en">the code is on GitHub</span></p>
     </header>
 
     <div class="projects">
@@ -659,13 +592,13 @@
   </div>
 </section>
 
-<!-- ============ V education ============ -->
-<section class="section" id="education" data-art="temple">
+<!-- ============ § 5 education ============ -->
+<section class="chapter" id="education">
   <div class="wrap">
     <header class="sec-head reveal">
-      <span class="sec-idx">V</span>
-      <h2 class="sec-title"><span lang="tr">Eğitim</span><span lang="en">Education</span></h2>
-      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+      <p class="sec-no"><span class="chalk">§5</span></p>
+      <h2 class="sec-title chalk"><span lang="tr">Eğitim</span><span lang="en">Education</span></h2>
+      <p class="sec-note hand"><span lang="tr">tez yolda</span><span lang="en">thesis under way</span></p>
     </header>
 
     <div class="edu">
@@ -703,13 +636,13 @@
   </div>
 </section>
 
-<!-- ============ VI experience ============ -->
-<section class="section" id="experience" data-art="sundial">
+<!-- ============ § 6 experience ============ -->
+<section class="chapter" id="experience">
   <div class="wrap">
     <header class="sec-head reveal">
-      <span class="sec-idx">VI</span>
-      <h2 class="sec-title"><span lang="tr">İş Deneyimi</span><span lang="en">Experience</span></h2>
-      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+      <p class="sec-no"><span class="chalk">§6</span></p>
+      <h2 class="sec-title chalk"><span lang="tr">İş Deneyimi</span><span lang="en">Experience</span></h2>
+      <p class="sec-note hand"><span lang="tr">2023 → 2026</span><span lang="en">2023 → 2026</span></p>
     </header>
 
     <ol class="timeline">
@@ -764,13 +697,13 @@
   </div>
 </section>
 
-<!-- ============ VII skills ============ -->
-<section class="section" id="skills" data-art="mosaic">
+<!-- ============ § 7 skills & languages ============ -->
+<section class="chapter" id="skills">
   <div class="wrap">
     <header class="sec-head reveal">
-      <span class="sec-idx">VII</span>
-      <h2 class="sec-title"><span lang="tr">Beceriler &amp; Diller</span><span lang="en">Skills &amp; Languages</span></h2>
-      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+      <p class="sec-no"><span class="chalk">§7</span></p>
+      <h2 class="sec-title chalk"><span lang="tr">Beceriler & Diller</span><span lang="en">Skills & Languages</span></h2>
+      <p class="sec-note hand"><span lang="tr">aletler</span><span lang="en">the toolbox</span></p>
     </header>
 
     <div class="skills-grid">
@@ -822,13 +755,13 @@
   </div>
 </section>
 
-<!-- ============ VIII contact ============ -->
-<section class="section contact" id="contact" data-art="laurel">
+<!-- ============ § 8 contact ============ -->
+<section class="chapter" id="contact">
   <div class="wrap">
     <header class="sec-head reveal">
-      <span class="sec-idx">VIII</span>
-      <h2 class="sec-title"><span lang="tr">İletişim</span><span lang="en">Contact</span></h2>
-      <span class="sec-line"><svg><use href="#i-hedera"/></svg></span>
+      <p class="sec-no"><span class="chalk">§8</span></p>
+      <h2 class="sec-title chalk"><span lang="tr">İletişim</span><span lang="en">Contact</span></h2>
+      <p class="sec-note hand"><span lang="tr">yaz, cevap veririm</span><span lang="en">write — I answer</span></p>
     </header>
 
     <div class="contact-inner reveal">
@@ -864,13 +797,60 @@
 </main>
 
 <footer class="footer">
-  <div class="meander" aria-hidden="true"></div>
+  <div class="wrap final">
+    <div class="theorem reveal">
+      <p class="thm-head chalk"><span lang="tr">Teorem 1.</span><span lang="en">Theorem 1.</span></p>
+      <p class="thm-claim">
+        <span lang="tr">Büyük dil modelleri daha <em>hızlı</em>, daha <em>hafif</em> ve daha <em>anlaşılır</em> hale getirilebilir.</span>
+        <span lang="en">Large language models can be made <em>faster</em>, <em>lighter</em> and more <em>understandable</em>.</span>
+      </p>
+      <p class="thm-proof"><span lang="tr">İspat.</span><span lang="en">Proof.</span></p>
+      <ol class="proof">
+        <li><span class="p-n">(i)</span>
+          <span lang="tr">INT4 nicemleme, bellek verimliliği ile kabul edilebilir doğruluk arasında dengeli bir seçenek sunuyor. <cite>Veri Bilimi Dergisi, 2025</cite></span>
+          <span lang="en">INT4 quantization offers a balanced trade-off between memory efficiency and acceptable accuracy. <cite>Veri Bilimi Dergisi, 2025</cite></span></li>
+        <li><span class="p-n">(ii)</span>
+          <span lang="tr">Retrieval head'ler uzun bağlamda hatırlama için nedensel olarak zorunlu: 87 head maskelenince recall 1,00 → 0,00. <cite>arXiv, 2026</cite></span>
+          <span lang="en">Retrieval heads are causally necessary for long-context recall: masking 87 heads takes recall from 1.00 → 0.00. <cite>arXiv, 2026</cite></span></li>
+        <li><span class="p-n">(iii)</span>
+          <span lang="tr">PALA, ReduceLROnPlateau ile aynı doğruluğa %25 daha az epoch'la ulaşıyor. <cite>Zenodo, 2026</cite></span>
+          <span lang="en">PALA reaches the same accuracy as ReduceLROnPlateau in 25% fewer epochs. <cite>Zenodo, 2026</cite></span></li>
+        <li><span class="p-n">(iv)</span>
+          <span lang="tr">Kurumsal bir RAG hattında model etkinliği %50 arttı. <cite>Enm Digital, 2025</cite></span>
+          <span lang="en">An enterprise RAG pipeline gained 50% in model effectiveness. <cite>Enm Digital, 2025</cite></span></li>
+      </ol>
+      <p class="qed chalk" aria-label="Q.E.D.">∎</p>
+      <p class="sig hand chalk">— C. Bayram</p>
+    </div>
+
+    <figure class="block-fig reveal" aria-hidden="true">
+      <svg class="t-block" id="t-block" viewBox="0 0 360 460"></svg>
+      <figcaption class="hand"><span lang="tr">fig. ∞ — her şeyin başladığı blok</span><span lang="en">fig. ∞ — the block where it all began</span></figcaption>
+    </figure>
+  </div>
+
   <div class="wrap footer-inner">
-    <p>© <span id="year">2026</span> Cengizhan Bayram</p>
-    <a class="mono to-top" href="#top"><span lang="tr">başa dön ↑</span><span lang="en">back to top ↑</span></a>
+    <p class="colophon mono">
+      <span lang="tr">Karatahtaya tebeşirle yazıldı · 2026</span>
+      <span lang="en">Written in chalk on slate · 2026</span>
+    </p>
+    <p class="footer-row"><span>© <span id="year">2026</span> Cengizhan Bayram</span>
+      <a class="mono to-top" href="#top"><span lang="tr">başa dön ↑</span><span lang="en">back to top ↑</span></a></p>
   </div>
 </footer>
 
-<script src="assets/js/main.js" defer></script>
+<!-- easter egg: type "bjk" or "1903" -->
+<div class="egg" id="egg" hidden>
+  <figure class="egg-card">
+    <span class="tape tape-l" aria-hidden="true"></span>
+    <span class="tape tape-r" aria-hidden="true"></span>
+    <img src="assets/img/bjk.webp" alt="Beşiktaş JK" width="435" height="560">
+    <figcaption class="hand">Kara Kartal · 1903</figcaption>
+  </figure>
+  <p class="egg-note hand chalk">!!! <span lang="tr">ispatı gerekmeyen tek aksiyom</span><span lang="en">the one axiom that needs no proof</span></p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js" defer></script>
+<script src="assets/js/board.js" defer></script>
 </body>
 </html>
