@@ -178,6 +178,8 @@
     ['.sec-no', 'circle'],
     ['.hero-lead em', 'circleYellow'],
     ['.stats .stat:first-child .stat-num', 'circleYellow'],
+    ['.m-docti .m-la', 'underline'],
+    ['.m-feri .m-la', 'circle'],
   ];
 
   function drawAnchored() {
@@ -767,9 +769,24 @@
     document.body.append(btn, clock);
 
     let on = false, layers = [], timers = [];
+    // the motto unfolds with the mode; when it sits above the reader it opens at once, and the page holds still
+    function setMad(v) {
+      const m = $('.motto');
+      if (!m || m.getBoundingClientRect().top >= 0) { root.classList.toggle('mad', v); return; }
+      const h0 = m.offsetHeight, still = [root.style, document.body.style];
+      m.style.transition = 'none';
+      still.forEach((s) => { s.overflowAnchor = 'none'; s.scrollBehavior = 'auto'; });
+      root.classList.toggle('mad', v);
+      scrollBy(0, m.offsetHeight - h0);
+      requestAnimationFrame(() => {
+        m.style.transition = '';
+        still.forEach((s) => { s.overflowAnchor = s.scrollBehavior = ''; });
+      });
+    }
     function start() {
       on = true;
-      root.classList.add('mad');
+      setMad(true);
+      $$('.motto .scrib.anchored').forEach(watch);
       btn.setAttribute('aria-pressed', 'true');
       if (!reduceMotion && $('main').animate) {
         $('main').animate(
@@ -778,7 +795,7 @@
       }
       const r = rng((Date.now() & 0xffff) + 1);
       const vh = innerHeight;
-      $$('main .chapter').forEach((sec) => {
+      $$('main .chapter:not(.motto)').forEach((sec) => {
         const layer = document.createElement('div');
         layer.className = 'mad-layer';
         layer.setAttribute('aria-hidden', 'true');
@@ -802,7 +819,8 @@
     }
     function stop() {
       on = false;
-      root.classList.remove('mad');
+      setMad(false);
+      $$('.motto .scrib.anchored').forEach((s) => s.classList.remove('drawn'));
       btn.setAttribute('aria-pressed', 'false');
       timers.forEach(clearTimeout);
       timers = [];

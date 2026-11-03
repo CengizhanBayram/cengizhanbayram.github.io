@@ -221,6 +221,37 @@ html[data-lang="tr"] .lang [data-l="tr"], html[data-lang="en"] .lang [data-l="en
 .marquee-list li::after { content: "·"; margin: 0 1.3em; color: var(--yellow); }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
+/* ---------- the motto, glossed word by word; folded away until mad-genius mode writes it on the board ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+main .chapter.motto { display: grid; grid-template-rows: 0fr; padding: 0; visibility: hidden; transition: grid-template-rows 0.7s var(--ease) 0.3s, visibility 0s linear 1s; }
+.mad .chapter.motto { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows 0.9s var(--ease), visibility 0s; }
+.motto-fold { min-height: 0; overflow: hidden; }
+.motto .wrap { padding: clamp(70px, 9vw, 120px) 0 clamp(10px, 2vw, 30px); }
+/* each word is chalked in from the left, one after another, then the glosses and the translation */
+.motto-tag, .m-gl, .motto-tr { opacity: 0; transition: opacity 0.4s var(--ease); }
+.m-la { clip-path: inset(-30px calc(100% + 30px) -30px -30px); transition: clip-path 0.4s cubic-bezier(0.6, 0, 0.3, 1); }
+.mad .motto-tag, .mad .m-gl, .mad .motto-tr { opacity: 1; transition: opacity 0.7s var(--ease) var(--d, 0.3s); }
+.mad .m-la { clip-path: inset(-30px -30px -30px -30px); transition: clip-path 0.55s cubic-bezier(0.6, 0, 0.3, 1) var(--d, 0.4s); }
+.mad .m-w:nth-child(2) .m-la { --d: 0.65s; }
+.mad .m-w:nth-child(3) .m-la { --d: 0.9s; }
+.mad .m-w:nth-child(4) .m-la { --d: 1.15s; }
+.mad .m-w:nth-child(5) .m-la { --d: 1.4s; }
+.mad .m-gl { --d: 1.5s; }
+.mad .motto-tr { --d: 1.8s; }
+.motto-tag { display: flex; align-items: baseline; gap: 14px; margin: 0 0 clamp(26px, 4vw, 44px); color: var(--faint); }
+.motto-ex { font: italic 400 1.7rem/1 var(--display); letter-spacing: 0; text-transform: none; color: var(--yellow); }
+.motto-line { margin: 0; }
+.m-words { display: flex; flex-wrap: wrap; align-items: flex-start; column-gap: clamp(14px, 2.2vw, 32px); row-gap: 26px; }
+.m-w { position: relative; display: flex; flex-direction: column; align-items: flex-start; }
+.m-la { position: relative; font: 400 clamp(3rem, 8.2vw, 7.2rem)/0.92 var(--display); color: var(--chalk); letter-spacing: -0.01em; }
+.m-gl { margin-top: 22px; padding-left: 2px; font: 500 clamp(0.68rem, 1.05vw, 0.82rem)/1.2 var(--mono); letter-spacing: 0.04em; color: var(--chalk-2); white-space: nowrap; }
+.motto-tr { margin: clamp(26px, 3.6vw, 40px) 0 0; font: italic 400 clamp(1.45rem, 2.6vw, 2.1rem)/1.2 var(--display); color: var(--chalk-2); }
+/* the aside, written last: feri is also the imperative of ferire */
+.m-pun { position: absolute; left: 66%; bottom: calc(100% + 18px); white-space: nowrap; font: 700 1.55rem/1 var(--hand); color: var(--pink); transform: rotate(-7deg); transform-origin: left bottom; }
+.m-pun-sm { display: none; margin: 14px 0 0; white-space: nowrap; font: 700 1.4rem/1 var(--hand); color: var(--pink); transform: rotate(-3deg); transform-origin: left; }
+.m-pun, .m-pun-sm { opacity: 0; clip-path: inset(0 100% 0 0); transition: clip-path 0.3s, opacity 0.3s; }
+.mad .m-pun, .mad .m-pun-sm { opacity: 1; clip-path: inset(0 0 0 0); transition: clip-path 0.9s cubic-bezier(0.6, 0, 0.3, 1) 2.2s, opacity 0.2s 2.2s; }
+
 /* ---------- chapters ---------- */
 .chapter:not(.hero) { padding: clamp(84px, 11vw, 140px) 0; }
 .sec-head { position: relative; display: flex; flex-direction: column; align-items: flex-start; margin-bottom: clamp(36px, 5vw, 60px); }
@@ -597,6 +628,9 @@ html[data-lang="tr"] .lang [data-l="tr"], html[data-lang="en"] .lang [data-l="en
 @media (max-width: 640px) {
   body { font-size: 1.04rem; }
   .chapter:not(.hero) { padding: 64px 0; }
+  .motto .wrap { padding: 56px 0 8px; }
+  .m-pun { display: none; }
+  .m-pun-sm { display: block; }
   .sec-head { margin-bottom: 32px; }
   .slashes { width: 80px; right: 0; }
   .interests, .projects, .pub-grid, .focus-grid, .contact-links { grid-template-columns: 1fr; }
